@@ -14,7 +14,7 @@ LABEL maintainer="Jake Jarvis <jake@jarv.is>"
 RUN apt-get update -qqy && \
     apt-get install -qqy curl ca-certificates apt-transport-https && \
     curl -sSL https://deb.nodesource.com/setup_12.x | bash - && \
-    apt-get install -y nodejs --no-install-recommends && \
+    apt-get install -y nodejs jq bc --no-install-recommends && \
     npm install -g npm && \
     npm install -g install yarn && \
     rm -rf /var/lib/apt/lists/*
