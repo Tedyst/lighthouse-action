@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/jakejarvis/chrome-headless-docker/chrome-headless-docker:latest
+FROM jakejarvis/chrome-headless:latest
 
 LABEL "com.github.actions.name"="Lighthouse Audit"
 LABEL "com.github.actions.description"="Run tests on a webpage via Google's Lighthouse tool"
