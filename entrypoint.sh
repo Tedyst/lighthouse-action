@@ -13,11 +13,27 @@ then
   REPORT_URL="https://deploy-preview-${PULL_REQUEST_NUMBER}--${INPUT_NETLIFY_SITE}"
   echo "Running against Netlify Deploy Preview ${REPORT_URL}"
 else
-  # Fallback to default UNPUT_URL
+  # Fallback to default INPUT_URL
   REPORT_URL=${INPUT_URL}
 fi
 
-lighthouse --port=9222 --chrome-flags="--headless --disable-gpu --no-sandbox --no-zygote" --output "html" --output "json" --output-path "report/lighthouse" ${REPORT_URL}
+if [[ ${INPUT_URL} != "http"* ]]
+then
+  # In this case we use INPUT_URL as the directory with the site 
+  # If the static page is stored in docs/, then INPUT_URL should be "docs"
+  # TODO: make this compatible with gh-pages branch
+  REPORT_URL=${INPUT_URL}
+  # http-server defaults to port 8080
+  http-server ${INPUT_URL} &
+  PID=$(echo "$!")
+
+  lighthouse --port=9222 --chrome-flags="--headless --disable-gpu --no-sandbox --no-zygote" --output "html" --output "json" --output-path "report/lighthouse" http://localhost:8080/
+
+  # Remove the http-server from background
+  kill $!
+else
+  lighthouse --port=9222 --chrome-flags="--headless --disable-gpu --no-sandbox --no-zygote" --output "html" --output "json" --output-path "report/lighthouse" ${REPORT_URL}
+fi
 
 # Parse individual scores from JSON output
 # Unorthodox jq syntax because of dashes -- https://github.com/stedolan/jq/issues/38

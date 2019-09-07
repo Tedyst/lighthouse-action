@@ -24,7 +24,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Download latest Lighthouse build from npm
 # Cache bust to ensure latest version when building the image
 ARG CACHEBUST=1
-RUN npm install -g lighthouse
+RUN npm install -g lighthouse http-server
 
 # Disable Lighthouse error reporting to prevent prompt
 ENV CI=true
