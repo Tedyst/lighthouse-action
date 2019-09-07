@@ -19,7 +19,7 @@ Inspired by [GoogleChromeLabs/lighthousebot](https://github.com/GoogleChromeLabs
 
 The following workflow runs a Lighthouse audit on [https://jarv.is/](https://jarv.is/), shows the five scores in the output of the step, and uploads the `.html` and `.json` results as artifacts to download (as shown above).
 
-```
+```yml
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
 
 This GitHub action integrates with Netlify's [Deploy Preview](https://www.netlify.com/docs/continuous-deployment/) to test PRs before deployment. To enable, you need to pass in your Netlify site like this:
 
-```
+```yml
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -52,6 +52,23 @@ jobs:
 
 On pull requests, the number will be extracted from the Github event data and used to generate the deploy preview URL as follows: `https://deploy-preview-$PR_NUMBER--$NETLIFY_SITE` and override the URL. The URL will be used as fallback on pushes event.
 
+### Static Site
+
+The following workflow runs a Lighthouse audit on localhost, from the directory `docs`, shows the five scores in the output of the step, and uploads the `.html` and `.json` results as artifacts to download (as shown above).
+
+```yml
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: jakejarvis/lighthouse-action@master
+      with:
+        url: 'docs'
+    - uses: actions/upload-artifact@master
+      with:
+        name: report
+        path: './report'
+```
 
 ## To-Do
 
