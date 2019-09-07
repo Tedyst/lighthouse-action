@@ -13,7 +13,7 @@ then
   REPORT_URL="https://deploy-preview-${PULL_REQUEST_NUMBER}--${INPUT_NETLIFY_SITE}"
   echo "Running against Netlify Deploy Preview ${REPORT_URL}"
 else
-  # Fallback to default UNPUT_URL
+  # Fallback to default INPUT_URL
   REPORT_URL=${INPUT_URL}
 fi
 
