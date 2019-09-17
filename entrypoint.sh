@@ -2,6 +2,28 @@
 
 set -e
 
+# Get the last deployment's url
+DEPLOYMENT_URL=$(curl --silent https://api.github.com/repos/$GITHUB_REPOSITORY/deployments | jq -r '.[0]["statuses_url"]')
+
+if [ "$DEPLOYMENT_URL" != null ]; then
+  echo Using GitHub Deployment API to check if deployment is ok.
+  echo Waiting up to 30 seconds for the deployment to finish.
+  for i in `seq 1 30`; do
+    # Get the status of the deployment
+    DEPLOYMENT=$(curl --silent $DEPLOYMENT_URL | jq -r '.[0]["state"]')
+    if [ "$DEPLOYMENT" == "success" ]; then
+      break
+    fi
+    sleep 1
+  done
+  # After we break from the loop, we check to see if the deployment is now available.
+  # If not, we exit the action without failing.
+  if [ "$DEPLOYMENT" != "success" ]; then
+    echo Deployment timed out. Lighthouse-Action will now exit.
+    exit 0
+  fi
+fi
+
 # Check if we're being triggered by a pull request.
 PULL_REQUEST_NUMBER=$(jq .number "$GITHUB_EVENT_PATH")
 
